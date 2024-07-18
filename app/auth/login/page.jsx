@@ -1,4 +1,4 @@
 
 export default function LoginPage() {
-  return <div>LoginPage</div>;
+  return <div>Loggg</div>;
 }

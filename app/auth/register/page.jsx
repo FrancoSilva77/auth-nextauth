@@ -1,12 +1,34 @@
 "use client"
+import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 
 export default function RegisterPage() {
 
+  const router = useRouter()
+
   const { register, handleSubmit, formState: { errors } } = useForm()
 
-  const onSubmit = handleSubmit(data => {
-    console.log(data);
+  const onSubmit = handleSubmit(async data => {
+
+    if (data.password !== data.confirmPassword) {
+      return alert('Las contraseñas no coinciden')
+    }
+
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      body: JSON.stringify({
+        username: data.username,
+        email: data.email,
+        password: data.password,
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+
+    if (res.ok) {
+      router.push('/auth/login')
+    }
   })
 
   console.log(errors);
