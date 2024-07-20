@@ -1,6 +1,6 @@
 import NextAuth from 'next-auth';
 import CredentialsProviders from 'next-auth/providers/credentials';
-import bcrypt from 'bcryptjs'
+import bcrypt from 'bcryptjs';
 import db from '@/src/libs/db';
 
 const authOptions = {
@@ -18,19 +18,22 @@ const authOptions = {
             email: credentials.email,
           },
         });
-        if (!userFound) return null;
+        if (!userFound) throw new Error('Usuario no encontrado');
 
         console.log(userFound);
 
-        const matchPassword = await bcrypt.compare(credentials.password, userFound.password)
+        const matchPassword = await bcrypt.compare(
+          credentials.password,
+          userFound.password
+        );
 
-        if(!matchPassword) return null
+        if (!matchPassword) throw new Error('La contraseña es incorrecta');
 
         return {
           id: userFound.id,
           name: userFound.username,
-          email: userFound.email
-        }
+          email: userFound.email,
+        };
       },
     }),
   ],
